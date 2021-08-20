@@ -44,7 +44,7 @@ class App extends React.Component {
     let tracks = this.state.playlistTracks;
 
     // check if playlistTracks contains 'track'
-    if (tracks.some((song) => song.id === track.id)) {
+    if (tracks.some((currentTrack) => currentTrack.id === track.id)) {
       //return if true
       return;
     }
@@ -56,7 +56,7 @@ class App extends React.Component {
   removeTrack(track) {
     //create array without selected track
     const tracks = this.state.playlistTracks.filter(
-      (song) => song.id !== track.id
+      (currentTrack) => currentTrack.id !== track.id
     );
 
     this.setState({ playlistTracks: tracks });
