@@ -1,4 +1,4 @@
-let accessToken;
+export let accessToken;
 const clientId = "31fbd25a484b4aea860fa6d27dd91537";
 const redirectUri = "http://localhost:3000/";
 
@@ -13,23 +13,26 @@ const Spotify = {
     const expiresInMatch = window.location.href.match(/expires_in=([^&]*)/);
 
     if (accessTokenMatch && expiresInMatch) {
-      console.log(accessTokenMatch);
       accessToken = accessTokenMatch[1];
+
       const expiresIn = Number(expiresInMatch[1]);
       // Clear the the parameters, allowing us to grab a new access token when it expires
       window.setTimeout(() => (accessToken = ""), expiresIn * 1000);
       window.history.pushState("Access Token", null, "/");
+      return accessToken;
     } else {
       const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}`;
 
       window.location = accessUrl;
+      // window.history.pushState({}, "", accessUrl);
     }
   },
 
-  async search(term) {
+  search(term) {
     const accessToken = Spotify.getAccessToken();
 
     const url = `https://api.spotify.com/v1/search?type=track&q=${term}`;
+
     return fetch(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -42,10 +45,12 @@ const Spotify = {
         if (!jsonResponse.tracks) {
           return [];
         }
-        return jsonResponse.track.items.map((track) => ({
+
+        console.log(jsonResponse.tracks.items);
+        return jsonResponse.tracks.items.map((track) => ({
           id: track.id,
           name: track.name,
-          artist: track.artist[0].name,
+          artist: track.artists[0].name,
           album: track.album.name,
           uri: track.uri,
         }));
@@ -66,7 +71,7 @@ const Spotify = {
         return response.json();
       })
       .then((jsonResponse) => {
-        userId = jsonResponse;
+        userId = jsonResponse.id;
         return fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
           headers: headers,
           method: "POST",
@@ -74,6 +79,7 @@ const Spotify = {
         });
       })
       .then((response) => {
+        console.log(response);
         return response.json();
       })
       .then((jsonResponse) => {
