@@ -1,6 +1,7 @@
 export let accessToken;
 const clientId = "31fbd25a484b4aea860fa6d27dd91537";
-const redirectUri = "http://localhost:3000/";
+// const redirectUri = "http://localhost:3000/";
+const redirectUri = "https://jammming-tipi.surge.sh/npm ru";
 
 const Spotify = {
   getAccessToken() {
@@ -46,7 +47,6 @@ const Spotify = {
           return [];
         }
 
-        console.log(jsonResponse.tracks.items);
         return jsonResponse.tracks.items.map((track) => ({
           id: track.id,
           name: track.name,

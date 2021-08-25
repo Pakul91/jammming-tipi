@@ -5,7 +5,7 @@ import SearchBar from "../SearchBar/SearchBar";
 import SearchResults from "../SearchResults/SearchResults";
 import Playlist from "../Playlist/Playlist";
 import Spotify from "../../util/Spotify";
-import { accessToken } from "../../util/Spotify";
+// import { accessToken } from "../../util/Spotify";
 
 class App extends React.Component {
   constructor(props) {
@@ -15,12 +15,18 @@ class App extends React.Component {
       searchResults: [],
       playlistName: "My Playlist",
       playlistTracks: [],
+      isConnected: false,
     };
+    this.changeIsConnected = this.changeIsConnected.bind(this);
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
+  }
+  changeIsConnected() {
+    Spotify.getAccessToken();
+    this.setState({ isConnected: true });
   }
 
   addTrack(track) {
@@ -72,7 +78,11 @@ class App extends React.Component {
           Ja<span className="highlight">mmm</span>ing
         </h1>
         <div className="App">
-          <SearchBar onSearch={this.search} />
+          <SearchBar
+            onSearch={this.search}
+            onConnection={this.changeIsConnected}
+            isConnected={this.state.isConnected}
+          />
           <div className="App-playlist">
             <SearchResults
               searchResults={this.state.searchResults}
@@ -96,7 +106,7 @@ class App extends React.Component {
   //     console.log(accessToken);
   //     Spotify.getAccessToken();
   //   }
-  }
+  // }
 }
 
 export default App;

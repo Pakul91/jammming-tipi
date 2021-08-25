@@ -21,20 +21,40 @@
   outline: none;
 }
 
-.SearchButton {
+.btn {
   cursor: pointer;
-  width: 8.11rem;
   padding: 0.77rem 0;
   border-radius: 54px;
   background-color: #010c3f;
   text-align: center;
-  font-size: 0.833rem;
   transition: background-color 0.25s;
   border: 0px;
   color: #fff;
   font-weight: 500;
 }
 
-.SearchButton:hover {
+.SearchButton {
+  width: 8.11rem;
+  font-size: 0.833rem;
+}
+
+.connectButton {
+  width: 35rem;
+  font-size: 2rem;
+}
+
+.btn:hover {
   background-color: rgba(108, 65, 233, 0.7);
+}
+
+.description {
+  width: 30rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #010c3f;
+  border-radius: 54px;
+  margin-bottom: 2.22rem;
+  color: #fff;
+  text-align: center;
+  font-size: 1rem;
 }
