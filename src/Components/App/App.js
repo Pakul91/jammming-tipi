@@ -17,7 +17,9 @@ class App extends React.Component {
       isConnected: false,
       displayPage: 1,
       resultsPerPage: 11,
+      isLoading: false,
     };
+
     this.changeIsConnected = this.changeIsConnected.bind(this);
     this.changePage = this.changePage.bind(this);
     this.addTrack = this.addTrack.bind(this);
@@ -25,6 +27,7 @@ class App extends React.Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
+    this.updateIsLoading = this.updateIsLoading.bind(this);
   }
 
   changeIsConnected() {
@@ -37,10 +40,8 @@ class App extends React.Component {
 
     if (value === 0) {
       this.setState({ displayPage: 1 });
-      console.log(this.state.displayPage);
     } else {
       this.setState({ displayPage: currentPage + value });
-      console.log("page change");
     }
   }
 
@@ -70,14 +71,24 @@ class App extends React.Component {
     this.setState({ playlistName: name });
   }
 
+  updateIsLoading() {
+    !this.state.isLoading
+      ? this.setState({ isLoading: true })
+      : this.setState({ isLoading: false });
+  }
+
   savePlaylist() {
+    this.updateIsLoading();
     const trackUris = this.state.playlistTracks.map((track) => track.uri);
-    Spotify.savePlaylist(this.state.playlistName, trackUris).then(() =>
-      this.setState({
-        playlistName: "New Playlist",
-        playlistTracks: [],
-      })
-    );
+
+    Spotify.savePlaylist(this.state.playlistName, trackUris)
+      .then(() =>
+        this.setState({
+          playlistName: "New Playlist",
+          playlistTracks: [],
+        })
+      )
+      .then(() => this.updateIsLoading());
   }
 
   search(term) {
@@ -118,7 +129,9 @@ class App extends React.Component {
               playlistTracks={this.state.playlistTracks}
               onRemove={this.removeTrack}
               onNameChange={this.updatePlaylistName}
+              isLoading={this.state.isLoading}
               onSave={this.savePlaylist}
+              x={this.updateIsLoading}
             />
           </div>
         </div>
