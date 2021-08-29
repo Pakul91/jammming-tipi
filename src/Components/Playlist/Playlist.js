@@ -18,22 +18,27 @@ class Playlist extends React.Component {
     return (
       <div className="Playlist">
         <input defaultValue={"New Playlist"} onInput={this.handleNameChange} />
+
         {this.props.isLoading ? (
-          <Loader />
+          <Loader message="Uploading your playlist!" />
         ) : (
-          <div>
-            <TrackList
-              playlistName={this.props.playlistName}
-              tracks={this.props.playlistTracks}
-              onRemove={this.props.onRemove}
-              isRemoval={true}
-            />
-            <button className="Playlist-save" onClick={this.props.onSave}>
-              SAVE TO SPOTIFY
-            </button>
-          </div>
+          <TrackList
+            playlistName={this.props.playlistName}
+            tracks={this.props.playlistTracks}
+            onRemove={this.props.onRemove}
+            isRemoval={true}
+          />
         )}
-        <button onClick={this.props.x}>X</button>
+
+        {this.props.isLoading ? (
+          ""
+        ) : (
+          <button className="Playlist-save" onClick={this.props.onSave}>
+            SAVE TO SPOTIFY
+          </button>
+        )}
+
+        {/* <button onClick={this.props.x}>X</button> */}
       </div>
     );
   }

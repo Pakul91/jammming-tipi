@@ -7,6 +7,7 @@ class Loader extends React.Component {
     return (
       <div className="loader">
         <img src={loadingImg} alt="" />
+        <p>{this.props.message}</p>
       </div>
     );
   }

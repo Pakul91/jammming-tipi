@@ -88,7 +88,7 @@ class App extends React.Component {
           playlistTracks: [],
         })
       )
-      .then(() => this.updateIsLoading());
+      .then(() => setTimeout(this.updateIsLoading, 2000));
   }
 
   search(term) {

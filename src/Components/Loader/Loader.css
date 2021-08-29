@@ -1,5 +1,8 @@
 .loader {
-  align-self: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .loader img {
@@ -21,4 +24,14 @@
     transform: scale(0.5);
     box-shadow: 0 0 0 2rem rgba(255, 255, 255, 0.2);
   }
+}
+
+.loader p {
+  background-color: #010c3f;
+  border: 1px solid;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  padding: 1rem;
+  text-align: center;
+  margin-top: 0.5rem;
 }
