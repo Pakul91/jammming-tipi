@@ -1,7 +1,7 @@
 export let accessToken;
 const clientId = "31fbd25a484b4aea860fa6d27dd91537";
-// const redirectUri = "http://localhost:3000/";
-const redirectUri = "https://jammming-tipi.surge.sh/npm ru";
+const redirectUri = "http://localhost:3000/";
+// const redirectUri = "https://jammming-tipi.surge.sh";
 
 const Spotify = {
   getAccessToken() {
@@ -32,7 +32,7 @@ const Spotify = {
   search(term) {
     const accessToken = Spotify.getAccessToken();
 
-    const url = `https://api.spotify.com/v1/search?type=track&q=${term}`;
+    const url = `https://api.spotify.com/v1/search?type=track&q=${term}&limit=50`;
 
     return fetch(url, {
       headers: {
@@ -53,6 +53,7 @@ const Spotify = {
           artist: track.artists[0].name,
           album: track.album.name,
           uri: track.uri,
+          preview: track.preview_url,
         }));
       });
   },

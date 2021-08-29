@@ -5,7 +5,6 @@ import SearchBar from "../SearchBar/SearchBar";
 import SearchResults from "../SearchResults/SearchResults";
 import Playlist from "../Playlist/Playlist";
 import Spotify from "../../util/Spotify";
-// import { accessToken } from "../../util/Spotify";
 
 class App extends React.Component {
   constructor(props) {
@@ -16,17 +15,33 @@ class App extends React.Component {
       playlistName: "My Playlist",
       playlistTracks: [],
       isConnected: false,
+      displayPage: 1,
+      resultsPerPage: 11,
     };
     this.changeIsConnected = this.changeIsConnected.bind(this);
+    this.changePage = this.changePage.bind(this);
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
   }
+
   changeIsConnected() {
     Spotify.getAccessToken();
     this.setState({ isConnected: true });
+  }
+
+  changePage(value = 0) {
+    const currentPage = this.state.displayPage;
+
+    if (value === 0) {
+      this.setState({ displayPage: 1 });
+      console.log(this.state.displayPage);
+    } else {
+      this.setState({ displayPage: currentPage + value });
+      console.log("page change");
+    }
   }
 
   addTrack(track) {
@@ -66,6 +81,11 @@ class App extends React.Component {
   }
 
   search(term) {
+    //Set search results to an empty array
+    this.setState({ searchResults: [] });
+    //Set current page to 1
+    this.changePage(0);
+    //Load and display search results from spotify
     Spotify.search(term).then((searchResults) => {
       this.setState({ searchResults: searchResults });
     });
@@ -82,10 +102,15 @@ class App extends React.Component {
             onSearch={this.search}
             onConnection={this.changeIsConnected}
             isConnected={this.state.isConnected}
+            changePage={this.changePage}
           />
           <div className="App-playlist">
             <SearchResults
+              page={this.state.displayPage}
+              resultsPerPage={this.state.resultsPerPage}
+              changePage={this.changePage}
               searchResults={this.state.searchResults}
+              playlistTracks={this.state.playlistTracks}
               onAdd={this.addTrack}
             />
             <Playlist
