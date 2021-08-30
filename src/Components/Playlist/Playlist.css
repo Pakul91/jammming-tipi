@@ -40,6 +40,28 @@
   background-color: rgba(108, 65, 233, 0.7);
 }
 
+.restartIcon {
+  height: 1.8rem;
+  margin-left: 2rem;
+  padding: 0.4rem;
+
+  border-radius: 50%;
+  background-color: #6c41ec;
+  transition: background-color 0.25s;
+  transition: transform 5s;
+}
+
+.restartIcon:hover {
+  background-color: rgba(108, 65, 233, 0.7);
+  transform: rotate(1080deg);
+}
+
+.actionBar {
+  display: flex;
+
+  align-items: flex-end;
+}
+
 ::-webkit-scrollbar {
   width: 0px;
   background: transparent;

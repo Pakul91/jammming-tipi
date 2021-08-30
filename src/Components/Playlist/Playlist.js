@@ -1,5 +1,6 @@
 import React from "react";
 import "./Playlist.css";
+import restartIcon from "./restartIcon.png";
 import Loader from "../Loader/Loader";
 
 import TrackList from "../TrackList/TrackList";
@@ -37,9 +38,18 @@ class Playlist extends React.Component {
         {this.props.isLoading || !this.props.isConnected ? (
           ""
         ) : (
-          <button className="Playlist-save" onClick={this.props.onSave}>
-            SAVE TO SPOTIFY
-          </button>
+          <div className="actionBar">
+            <button className="Playlist-save" onClick={this.props.onSave}>
+              SAVE TO SPOTIFY
+            </button>
+            <img
+              className="restartIcon"
+              src={restartIcon}
+              alt=""
+              title="Clear playlist. Warinig! Cleared playlist can't be restored!"
+              onClick={this.props.clearPlaylist}
+            />
+          </div>
         )}
 
         {/* <button onClick={this.props.x}>X</button> */}

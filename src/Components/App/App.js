@@ -38,6 +38,7 @@ class App extends React.Component {
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
+    this.clearPlaylist = this.clearPlaylist.bind(this);
     this.search = this.search.bind(this);
   }
 
@@ -49,12 +50,13 @@ class App extends React.Component {
       this.storage.setItem("playlistTracks", []);
     // if storage item playlistName exists don't do anything if not create new
     this.storage.getItem("playlistName") ||
-      this.storage.setItem("playlistName", []);
+      this.storage.setItem("playlistName", "");
   }
 
   // update playlist on the local store
-  storePlaylist() {
-    const playlist = this.state.playlistTracks;
+  storePlaylist(input) {
+    const playlist = input;
+    console.log(playlist);
     this.storage.setItem("playlistTracks", JSON.stringify(playlist));
   }
 
@@ -128,7 +130,7 @@ class App extends React.Component {
 
     tracks.push(track);
     this.setState({ playlistTracks: tracks });
-    this.storePlaylist();
+    this.storePlaylist(this.state.playlistTracks);
   }
 
   // Romve track from the tracklist
@@ -139,7 +141,7 @@ class App extends React.Component {
     );
 
     this.setState({ playlistTracks: tracks });
-    this.storePlaylist();
+    this.storePlaylist(this.state.playlistTracks);
   }
 
   updatePlaylistName(name) {
@@ -160,6 +162,13 @@ class App extends React.Component {
         })
       )
       .then(() => setTimeout(this.updateIsLoading, 2000));
+  }
+
+  clearPlaylist() {
+    this.setState({ playlistTracks: [], playlistName: "My New Playlist" });
+    console.log(this.state.playlistTracks);
+    this.storePlaylist([]);
+    this.storePlaylistName("My New Playlist");
   }
 
   search(term) {
@@ -201,6 +210,7 @@ class App extends React.Component {
               onRemove={this.removeTrack}
               onNameChange={this.updatePlaylistName}
               storeName={this.storePlaylistName}
+              clearPlaylist={this.clearPlaylist}
               isLoading={this.state.isLoading}
               isConnected={this.state.isConnected}
               onSave={this.savePlaylist}
