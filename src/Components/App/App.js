@@ -153,6 +153,11 @@ class App extends React.Component {
     // Pass the function to the Spotify object. This will allow it to access the state: isConnected
     Spotify.importFunction(this.setDisconect);
 
+    // Create local storage for playlist and playlist name
+    this.storage.setItem("playlistTrack", []);
+    this.storage.setItem("playlistName", "");
+
+    // if there is access token in url
     if (window.location.hash) {
       Spotify.getAccessToken();
       this.setState({ isConnected: true });
