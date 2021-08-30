@@ -56,7 +56,6 @@ class App extends React.Component {
   // update playlist on the local store
   storePlaylist(input) {
     const playlist = input;
-    console.log(playlist);
     this.storage.setItem("playlistTracks", JSON.stringify(playlist));
   }
 
@@ -166,7 +165,6 @@ class App extends React.Component {
 
   clearPlaylist() {
     this.setState({ playlistTracks: [], playlistName: "My New Playlist" });
-    console.log(this.state.playlistTracks);
     this.storePlaylist([]);
     this.storePlaylistName("My New Playlist");
   }

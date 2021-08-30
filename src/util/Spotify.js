@@ -1,6 +1,6 @@
 const clientId = "31fbd25a484b4aea860fa6d27dd91537";
-// const redirectUri = "http://localhost:3000/";
-const redirectUri = "https://jammming-tipi.surge.sh";
+const redirectUri = "http://localhost:3000/";
+// const redirectUri = "https://jammming-tipi.surge.sh";
 
 let setToDisconnected;
 let accessToken;
@@ -16,7 +16,6 @@ const Spotify = {
   // Set timer to clear the the parameters and url, set App state to disconected, end remove expiryTime from localStorage
   // If parameter 'false' or empty function will execute after calculated time. If true will execute immediately
   clearAndDisconnect(now = false) {
-    console.log("timeout set");
     window.setTimeout(
       () => {
         accessToken = "";
@@ -93,14 +92,14 @@ const Spotify = {
         if (!jsonResponse.tracks) {
           return [];
         }
-
+        console.log(jsonResponse);
         return jsonResponse.tracks.items.map((track) => ({
           id: track.id,
           name: track.name,
           artist: track.artists[0].name,
           album: track.album.name,
           uri: track.uri,
-          preview: track.preview_url,
+          preview: track.preview_url === null ? "" : track.preview_url,
         }));
       });
   },
