@@ -17,7 +17,10 @@ class Playlist extends React.Component {
   render() {
     return (
       <div className="Playlist">
-        <input defaultValue={"New Playlist"} onInput={this.handleNameChange} />
+        <input
+          value={this.props.playlistName}
+          onInput={this.handleNameChange}
+        />
 
         {this.props.isLoading ? (
           <Loader message="Uploading your playlist!" />
@@ -30,7 +33,7 @@ class Playlist extends React.Component {
           />
         )}
 
-        {this.props.isLoading ? (
+        {this.props.isLoading || !this.props.isConnected ? (
           ""
         ) : (
           <button className="Playlist-save" onClick={this.props.onSave}>

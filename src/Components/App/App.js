@@ -10,9 +10,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.storage = window.localStorage;
+
     this.state = {
       searchResults: [],
-      playlistName: "My Playlist",
+      playlistName: "My New Playlist",
       playlistTracks: [],
       isConnected: false,
       displayPage: 1,
@@ -21,6 +23,7 @@ class App extends React.Component {
     };
 
     this.changeIsConnected = this.changeIsConnected.bind(this);
+    this.setDisconect = this.setDisconect.bind(this);
     this.changePage = this.changePage.bind(this);
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
@@ -31,8 +34,14 @@ class App extends React.Component {
   }
 
   changeIsConnected() {
+    // generate access token
     Spotify.getAccessToken();
-    this.setState({ isConnected: true });
+    // if token is granted and placed in url change state to connected
+    if (window.location.hash) this.setState({ isConnected: true });
+  }
+
+  setDisconect() {
+    this.setState({ isConnected: false });
   }
 
   changePage(value = 0) {
@@ -45,6 +54,7 @@ class App extends React.Component {
     }
   }
 
+  // Add track to the playlist
   addTrack(track) {
     let tracks = this.state.playlistTracks;
 
@@ -58,6 +68,7 @@ class App extends React.Component {
     this.setState({ playlistTracks: tracks });
   }
 
+  // Romve track from the tracklist
   removeTrack(track) {
     //create array without selected track
     const tracks = this.state.playlistTracks.filter(
@@ -84,7 +95,7 @@ class App extends React.Component {
     Spotify.savePlaylist(this.state.playlistName, trackUris)
       .then(() =>
         this.setState({
-          playlistName: "New Playlist",
+          playlistName: "My New Playlist",
           playlistTracks: [],
         })
       )
@@ -130,21 +141,23 @@ class App extends React.Component {
               onRemove={this.removeTrack}
               onNameChange={this.updatePlaylistName}
               isLoading={this.state.isLoading}
+              isConnected={this.state.isConnected}
               onSave={this.savePlaylist}
-              x={this.updateIsLoading}
             />
           </div>
         </div>
       </div>
     );
   }
-  // componentDidMount() {
-  //   console.log("accessToken");
-  //   if (accessToken) {
-  //     console.log(accessToken);
-  //     Spotify.getAccessToken();
-  //   }
-  // }
+  componentDidMount() {
+    // Pass the function to the Spotify object. This will allow it to access the state: isConnected
+    Spotify.importFunction(this.setDisconect);
+
+    if (window.location.hash) {
+      Spotify.getAccessToken();
+      this.setState({ isConnected: true });
+    }
+  }
 }
 
 export default App;

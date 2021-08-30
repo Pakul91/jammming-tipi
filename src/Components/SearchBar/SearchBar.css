@@ -48,7 +48,7 @@
 }
 
 .description {
-  width: 30rem;
+  width: rem;
   margin-top: 1rem;
   padding: 1rem;
   border: 1px solid #010c3f;
@@ -57,4 +57,9 @@
   color: #fff;
   text-align: center;
   font-size: 1rem;
+}
+
+.description h3 {
+  font-size: 1.2rem;
+  padding-bottom: 1rem;
 }

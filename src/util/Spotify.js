@@ -1,25 +1,72 @@
-export let accessToken;
 const clientId = "31fbd25a484b4aea860fa6d27dd91537";
 const redirectUri = "http://localhost:3000/";
 // const redirectUri = "https://jammming-tipi.surge.sh";
 
+let setToDisconnected;
+let accessToken;
+const storage = window.localStorage;
+
 const Spotify = {
+  //import function from othe component and assing in to a variable
+  // In this case we will import from App.js and function will allow to change isConected state in App
+  importFunction(foo) {
+    setToDisconnected = foo;
+  },
+
+  // Set timer to clear the the parameters and url, set App state to disconected, end remove expiryTime from localStorage
+  // If parameter 'false' or empty function will execute after calculated time. If true will execute immediately
+  clearAndDisconnect(now = false) {
+    console.log("timeout set");
+    window.setTimeout(
+      () => {
+        accessToken = "";
+        window.history.pushState("Access Token", null, "/");
+        setToDisconnected();
+        storage.removeItem("expiryTime");
+        // if parameter passed = false || empty timeout will be the difference between saved time stamp and now. If true timer = 0
+      },
+      now ? 0 : storage.getItem("expiryTime") - Date.now()
+    );
+  },
+
   getAccessToken() {
     if (accessToken) {
       return accessToken;
     }
 
-    //check for the access token match
+    //check for the access token match in the url
     const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
     const expiresInMatch = window.location.href.match(/expires_in=([^&]*)/);
 
+    //If match
     if (accessTokenMatch && expiresInMatch) {
       accessToken = accessTokenMatch[1];
-
       const expiresIn = Number(expiresInMatch[1]);
-      // Clear the the parameters, allowing us to grab a new access token when it expires
-      window.setTimeout(() => (accessToken = ""), expiresIn * 1000);
-      window.history.pushState("Access Token", null, "/");
+
+      //if there is no expiryTime saved in the storage create one from now + expiresIn extracted from url
+      if (!storage.getItem("expiryTime")) {
+        storage.setItem("expiryTime", Date.now() + expiresIn * 1000);
+        this.clearAndDisconnect();
+      }
+
+      //if there is no expiryTime saved in the storage and its time stamp i bigger then now:
+      if (
+        storage.getItem("expiryTime") &&
+        storage.getItem("expiryTime") > Date.now()
+      ) {
+        this.clearAndDisconnect();
+      }
+
+      //if there is no expiryTime saved in the storage and its time stamp i smaller then now:
+      if (
+        storage.getItem("expiryTime") &&
+        storage.getItem("expiryTime") <= Date.now()
+      ) {
+        this.clearAndDisconnect(true);
+        this.getAccessToken();
+        return;
+      }
+
       return accessToken;
     } else {
       const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}`;

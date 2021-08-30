@@ -20,7 +20,7 @@ class SearchBar extends React.Component {
   }
 
   ConnectOrSearch() {
-    if (this.props.isConnected || window.location.hash) {
+    if (this.props.isConnected) {
       return (
         <div className="SearchBar">
           <input
@@ -30,7 +30,6 @@ class SearchBar extends React.Component {
           <button
             className="btn SearchButton"
             onClick={() => {
-              this.props.onConnection();
               this.search();
             }}
           >
@@ -47,12 +46,15 @@ class SearchBar extends React.Component {
           >
             Click to connect to Spotify!
           </button>
-          <p className="description">
-            Clicking the above button will connect the application to your
-            Spotify account. This will allow you to search for songs and artists
-            to create your own custom-made playlist and upload it to your
-            Spotify account!
-          </p>
+          <div className="description">
+            <h3>You haven't connected yet or your access token has expired.</h3>
+            <p>
+              Clicking the above button will connect the application to your
+              Spotify account. This will allow you to search for songs and
+              artists to create your own custom-made playlist and upload it to
+              your Spotify account!
+            </p>
+          </div>
         </div>
       );
     }
