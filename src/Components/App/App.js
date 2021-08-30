@@ -22,16 +22,64 @@ class App extends React.Component {
       isLoading: false,
     };
 
+    // 1 Local storage methods
+    this.storePlaylist = this.storePlaylist.bind(this);
+    this.initiateStorage = this.initiateStorage.bind(this);
+    this.loadStoredData = this.loadStoredData.bind(this);
+    this.storePlaylistName = this.storePlaylistName.bind(this);
+    // 2 Connection and loading methods
     this.changeIsConnected = this.changeIsConnected.bind(this);
     this.setDisconect = this.setDisconect.bind(this);
+    this.updateIsLoading = this.updateIsLoading.bind(this);
+    // 3 Pagination methods
     this.changePage = this.changePage.bind(this);
+    // 4 Search and playlists related methods
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
-    this.updateIsLoading = this.updateIsLoading.bind(this);
   }
+
+  //  ========== 1) Local storage methods =============
+  // Create storage items
+  initiateStorage() {
+    // if storage item playlistTracks exists don't do anything if not create new
+    this.storage.getItem("playlistTracks") ||
+      this.storage.setItem("playlistTracks", []);
+    // if storage item playlistName exists don't do anything if not create new
+    this.storage.getItem("playlistName") ||
+      this.storage.setItem("playlistName", []);
+  }
+
+  // update playlist on the local store
+  storePlaylist() {
+    const playlist = this.state.playlistTracks;
+    this.storage.setItem("playlistTracks", JSON.stringify(playlist));
+  }
+
+  // update playlistName on the local store
+  storePlaylistName(input) {
+    this.storage.setItem("playlistName", JSON.stringify(input));
+  }
+
+  // Load stored data
+  loadStoredData() {
+    if (this.storage.getItem("playlistTracks")) {
+      this.setState({
+        playlistTracks: JSON.parse(this.storage.getItem("playlistTracks")),
+      });
+    }
+
+    if (this.storage.getItem("playlistName")) {
+      this.setState({
+        playlistName: JSON.parse(this.storage.getItem("playlistName")),
+      });
+    }
+  }
+  //  ======================================================
+
+  // ========== 2) Connection and loading methods =============
 
   changeIsConnected() {
     // generate access token
@@ -44,6 +92,16 @@ class App extends React.Component {
     this.setState({ isConnected: false });
   }
 
+  updateIsLoading() {
+    !this.state.isLoading
+      ? this.setState({ isLoading: true })
+      : this.setState({ isLoading: false });
+  }
+
+  //  ======================================================
+
+  // ========== 3) Pagination methods =============
+
   changePage(value = 0) {
     const currentPage = this.state.displayPage;
 
@@ -53,6 +111,10 @@ class App extends React.Component {
       this.setState({ displayPage: currentPage + value });
     }
   }
+
+  //  ======================================================
+
+  // ========== 4) Search and playlists related methods =============
 
   // Add track to the playlist
   addTrack(track) {
@@ -66,6 +128,7 @@ class App extends React.Component {
 
     tracks.push(track);
     this.setState({ playlistTracks: tracks });
+    this.storePlaylist();
   }
 
   // Romve track from the tracklist
@@ -76,16 +139,13 @@ class App extends React.Component {
     );
 
     this.setState({ playlistTracks: tracks });
+    this.storePlaylist();
   }
 
   updatePlaylistName(name) {
     this.setState({ playlistName: name });
-  }
 
-  updateIsLoading() {
-    !this.state.isLoading
-      ? this.setState({ isLoading: true })
-      : this.setState({ isLoading: false });
+    this.storePlaylistName(name);
   }
 
   savePlaylist() {
@@ -140,6 +200,7 @@ class App extends React.Component {
               playlistTracks={this.state.playlistTracks}
               onRemove={this.removeTrack}
               onNameChange={this.updatePlaylistName}
+              storeName={this.storePlaylistName}
               isLoading={this.state.isLoading}
               isConnected={this.state.isConnected}
               onSave={this.savePlaylist}
@@ -153,14 +214,17 @@ class App extends React.Component {
     // Pass the function to the Spotify object. This will allow it to access the state: isConnected
     Spotify.importFunction(this.setDisconect);
 
-    // Create local storage for playlist and playlist name
-    this.storage.setItem("playlistTrack", []);
-    this.storage.setItem("playlistName", "");
+    // Create local storage in the browser
+    this.initiateStorage();
 
     // if there is access token in url
     if (window.location.hash) {
+      // assign access token from url
       Spotify.getAccessToken();
+      // set state to connected
       this.setState({ isConnected: true });
+      // Load stored data
+      this.loadStoredData();
     }
   }
 }
