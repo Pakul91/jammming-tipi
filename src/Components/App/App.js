@@ -160,7 +160,10 @@ class App extends React.Component {
           playlistTracks: [],
         })
       )
-      .then(() => setTimeout(this.updateIsLoading, 2000));
+      .then(() => {
+        setTimeout(this.updateIsLoading, 2000);
+        this.clearPlaylist();
+      });
   }
 
   clearPlaylist() {
