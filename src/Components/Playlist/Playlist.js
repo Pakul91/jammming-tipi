@@ -31,6 +31,8 @@ class Playlist extends React.Component {
             tracks={this.props.playlistTracks}
             onRemove={this.props.onRemove}
             isRemoval={true}
+            playTrack={this.props.playTrack}
+            pauseTrack={this.props.pauseTrack}
           />
         )}
 

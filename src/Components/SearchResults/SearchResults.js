@@ -20,6 +20,8 @@ class SearchResults extends React.Component {
           onAdd={this.props.onAdd}
           isRemoval={false}
           resultsPerPage={this.props.resultsPerPage}
+          playTrack={this.props.playTrack}
+          pauseTrack={this.props.pauseTrack}
         />
 
         {this.props.searchResults.length !== 0 ? (

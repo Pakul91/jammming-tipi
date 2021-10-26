@@ -40,6 +40,8 @@ class App extends React.Component {
     this.savePlaylist = this.savePlaylist.bind(this);
     this.clearPlaylist = this.clearPlaylist.bind(this);
     this.search = this.search.bind(this);
+    this.playTrack = this.playTrack.bind(this);
+    this.pauseTrack = this.pauseTrack.bind(this);
   }
 
   //  ========== 1) Local storage methods =============
@@ -172,6 +174,61 @@ class App extends React.Component {
     this.storePlaylistName("My New Playlist");
   }
 
+  playTrack(clickedTrack) {
+    let searchResults = [];
+    let playlistTracks = [];
+
+    if (this.state.searchResults.length !== 0) {
+      searchResults = this.state.searchResults
+        .filter((track) => !this.state.playlistTracks.includes(track))
+        .map((track) =>
+          track.id === clickedTrack.id
+            ? { ...track, playing: true }
+            : { ...track, playing: false }
+        );
+    }
+
+    if (this.state.playlistTracks.length !== 0) {
+      playlistTracks = this.state.playlistTracks.map((track) =>
+        track.id === clickedTrack.id
+          ? { ...track, playing: true }
+          : { ...track, playing: false }
+      );
+    }
+    this.setState({
+      searchResults,
+      playlistTracks,
+    });
+  }
+
+  pauseTrack(clickedTrack) {
+    let searchResults = [];
+    let playlistTracks = [];
+
+    if (this.state.searchResults.length !== 0) {
+      searchResults = this.state.searchResults
+        .filter((track) => !this.state.playlistTracks.includes(track))
+        .map((track) =>
+          track.id === clickedTrack.id
+            ? { ...track, playing: false }
+            : { ...track }
+        );
+    }
+
+    if (this.state.playlistTracks.length !== 0) {
+      playlistTracks = this.state.playlistTracks.map((track) =>
+        track.id === clickedTrack.id
+          ? { ...track, playing: false }
+          : { ...track }
+      );
+    }
+
+    this.setState({
+      searchResults,
+      playlistTracks,
+    });
+  }
+
   search(term) {
     //Set search results to an empty array
     this.setState({ searchResults: [] });
@@ -204,6 +261,8 @@ class App extends React.Component {
               searchResults={this.state.searchResults}
               playlistTracks={this.state.playlistTracks}
               onAdd={this.addTrack}
+              playTrack={this.playTrack}
+              pauseTrack={this.pauseTrack}
             />
             <Playlist
               playlistName={this.state.playlistName}
@@ -215,6 +274,8 @@ class App extends React.Component {
               isLoading={this.state.isLoading}
               isConnected={this.state.isConnected}
               onSave={this.savePlaylist}
+              playTrack={this.playTrack}
+              pauseTrack={this.pauseTrack}
             />
           </div>
         </div>

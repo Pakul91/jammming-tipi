@@ -12,10 +12,6 @@ class Track extends React.Component {
     this.pauseSample = this.pauseSample.bind(this);
 
     this.sample = new Audio(this.props.track.preview);
-
-    this.state = {
-      isPlaying: false,
-    };
   }
 
   addTrack() {
@@ -27,15 +23,15 @@ class Track extends React.Component {
   }
 
   playSample() {
-    this.setState({ isPlaying: true });
+    this.props.playTrack(this.props.track);
     this.sample.play();
     this.sample.addEventListener("ended", () => {
-      this.setState({ isPlaying: false });
+      this.pauseSample();
     });
   }
 
   pauseSample() {
-    this.setState({ isPlaying: false });
+    this.props.pauseTrack(this.props.track);
     this.sample.pause();
   }
 
@@ -63,7 +59,7 @@ class Track extends React.Component {
         </div>
       );
     }
-    if (!this.state.isPlaying) {
+    if (!this.props.playing) {
       return (
         <img
           className="icon"
@@ -75,7 +71,7 @@ class Track extends React.Component {
       );
     }
 
-    if (this.state.isPlaying) {
+    if (this.props.playing) {
       return (
         <img
           className="icon"
@@ -85,6 +81,12 @@ class Track extends React.Component {
           title="Pause sample."
         />
       );
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.playing === false) {
+      this.sample.pause();
     }
   }
 
