@@ -130,7 +130,9 @@ class App extends React.Component {
     }
 
     tracks.push(track);
-    this.setState({ playlistTracks: tracks });
+    this.setState({
+      playlistTracks: tracks,
+    });
     this.storePlaylist(this.state.playlistTracks);
   }
 
@@ -141,7 +143,9 @@ class App extends React.Component {
       (currentTrack) => currentTrack.id !== track.id
     );
 
-    this.setState({ playlistTracks: tracks });
+    this.setState({
+      playlistTracks: tracks,
+    });
     this.storePlaylist(this.state.playlistTracks);
   }
 
@@ -179,13 +183,11 @@ class App extends React.Component {
     let playlistTracks = [];
 
     if (this.state.searchResults.length !== 0) {
-      searchResults = this.state.searchResults
-        .filter((track) => !this.state.playlistTracks.includes(track))
-        .map((track) =>
-          track.id === clickedTrack.id
-            ? { ...track, playing: true }
-            : { ...track, playing: false }
-        );
+      searchResults = this.state.searchResults.map((track) =>
+        track.id === clickedTrack.id
+          ? { ...track, playing: true }
+          : { ...track, playing: false }
+      );
     }
 
     if (this.state.playlistTracks.length !== 0) {
@@ -206,21 +208,17 @@ class App extends React.Component {
     let playlistTracks = [];
 
     if (this.state.searchResults.length !== 0) {
-      searchResults = this.state.searchResults
-        .filter((track) => !this.state.playlistTracks.includes(track))
-        .map((track) =>
-          track.id === clickedTrack.id
-            ? { ...track, playing: false }
-            : { ...track }
-        );
+      searchResults = this.state.searchResults.map((track) => ({
+        ...track,
+        playing: false,
+      }));
     }
 
     if (this.state.playlistTracks.length !== 0) {
-      playlistTracks = this.state.playlistTracks.map((track) =>
-        track.id === clickedTrack.id
-          ? { ...track, playing: false }
-          : { ...track }
-      );
+      playlistTracks = this.state.playlistTracks.map((track) => ({
+        ...track,
+        playing: false,
+      }));
     }
 
     this.setState({

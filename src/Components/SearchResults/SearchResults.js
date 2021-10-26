@@ -4,12 +4,24 @@ import TrackList from "../TrackList/TrackList";
 import Pagination from "../Pogination/Pagination";
 
 class SearchResults extends React.Component {
+  componentDidUpdate(prevProps) {
+    // console.log(
+    //   prevProps.searchResults.length,
+    //   this.props.searchResults.length
+    // );
+  }
+
   render() {
     const start = (this.props.page - 1) * this.props.resultsPerPage;
     const end = this.props.page * this.props.resultsPerPage;
 
     const tracksToDisplay = this.props.searchResults
-      .filter((track) => !this.props.playlistTracks.includes(track))
+      .filter(
+        (track) =>
+          !this.props.playlistTracks.some(
+            (playlistTrack) => playlistTrack.id === track.id
+          )
+      )
       .slice(start, end);
 
     return (

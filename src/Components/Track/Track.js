@@ -16,9 +16,11 @@ class Track extends React.Component {
 
   addTrack() {
     this.props.onAdd(this.props.track);
+    this.pauseSample();
   }
 
   removeTrack() {
+    this.pauseSample();
     this.props.onRemove(this.props.track);
   }
 
@@ -84,7 +86,7 @@ class Track extends React.Component {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.props.playing === false) {
       this.sample.pause();
     }
