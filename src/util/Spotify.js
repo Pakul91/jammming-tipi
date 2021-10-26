@@ -1,7 +1,7 @@
 const clientId = "31fbd25a484b4aea860fa6d27dd91537";
-const redirectUri = "http://localhost:3000/";
+// const redirectUri = "http://localhost:3000/";g
 // const redirectUri = "https://jammming-tipi.surge.sh";
-// const redirectUri = "https://jammming-tipi.netlify.app/";
+const redirectUri = "https://jammming-tipi.netlify.app/";
 
 let setToDisconnected;
 let accessToken;
